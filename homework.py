@@ -23,7 +23,6 @@ class InfoMessage:
 
 class Training:
     """Базовый класс тренировки."""
-
     LEN_STEP: float = 0.65
     M_IN_KM: int = 1000
     MIN_IN_H: int = 60
@@ -43,12 +42,11 @@ class Training:
 
     def get_mean_speed(self) -> float:
         """Получить среднюю скорость движения."""
-        mean_speed = self.get_distance() / self.duration
-        return mean_speed
+        return self.get_distance() / self.duration
 
     def get_spent_calories(self):
         """Получить количество затраченных калорий."""
-        pass
+        raise NotImplementedError
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -68,9 +66,8 @@ class Running(Training):
         duration = self.duration * self.MIN_IN_H
         calories2 = self.CALORIES_MEAN_SPEED_SHIFT
         weight = self.weight
-        spent_calories = ((calories * mean_speed + calories2) * weight
+        return ((calories * mean_speed + calories2) * weight
                           / self.M_IN_KM * duration)
-        return spent_calories
 
 
 class SportsWalking(Training):
@@ -96,8 +93,7 @@ class SportsWalking(Training):
         c_sp = self.CALORIES_SPEED_HEIGHT_MULTIPLIER
         temp1 = speed ** 2 / height
         temp2 = temp1 * c_sp * self.weight
-        spent_calories = (c_wght * self.weight + temp2) * duration
-        return spent_calories
+        return (c_wght * self.weight + temp2) * duration
 
 
 class Swimming(Training):
@@ -117,16 +113,14 @@ class Swimming(Training):
         self.length_pool = length_pool
 
     def get_mean_speed(self) -> float:
-        mean_speed = (self.length_pool * self.count_pool
-                      / self.M_IN_KM / self.duration)
         """Получить среднюю скорость движения."""
-        return mean_speed
+        return (self.length_pool * self.count_pool
+                      / self.M_IN_KM / self.duration)
 
     def get_spent_calories(self) -> float:
         temp = self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SHIFT
-        spent_calories = (temp * self.CALORIES_WEIGHT_MULTIPLIER
+        return (temp * self.CALORIES_WEIGHT_MULTIPLIER
                           * self.weight * self.duration)
-        return spent_calories
 
 
 def read_package(workout_type: str, data: list) -> Training:
@@ -151,5 +145,4 @@ if __name__ == '__main__':
     ]
 
     for workout_type, data in packages:
-        training = read_package(workout_type, data)
-        main(training)
+        main(read_package(workout_type, data))
