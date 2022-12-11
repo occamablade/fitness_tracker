@@ -61,13 +61,11 @@ class Running(Training):
     CALORIES_MEAN_SPEED_SHIFT: float = 1.79
 
     def get_spent_calories(self) -> float:
-        calories = self.CALORIES_MEAN_SPEED_MULTIPLIER
-        mean_speed = self.get_mean_speed()
-        duration = self.duration * self.MIN_IN_H
-        calories2 = self.CALORIES_MEAN_SPEED_SHIFT
-        weight = self.weight
-        return ((calories * mean_speed + calories2) * weight
-                / self.M_IN_KM * duration)
+        return ((self.CALORIES_MEAN_SPEED_MULTIPLIER
+                * self.get_mean_speed()
+                + self.CALORIES_MEAN_SPEED_SHIFT)
+                * self.weight
+                / self.M_IN_KM * self.duration * self.MIN_IN_H)
 
 
 class SportsWalking(Training):
@@ -86,14 +84,12 @@ class SportsWalking(Training):
         self.height = height
 
     def get_spent_calories(self) -> float:
-        height = self.height / self.CM_IN_M
-        duration = self.duration * self.MIN_IN_H
-        speed = self.get_mean_speed() * self.KMH_IN_MSEC
-        c_wght = self.CALORIES_WEIGHT_MULTIPLIER
-        c_sp = self.CALORIES_SPEED_HEIGHT_MULTIPLIER
-        temp1 = speed ** 2 / height
-        temp2 = temp1 * c_sp * self.weight
-        return (c_wght * self.weight + temp2) * duration
+        return (self.CALORIES_WEIGHT_MULTIPLIER
+                * self.weight + self.get_mean_speed()
+                * self.KMH_IN_MSEC ** 2
+                / self.height / self.CM_IN_M
+                * self.CALORIES_SPEED_HEIGHT_MULTIPLIER
+                * self.weight) * self.duration * self.MIN_IN_H
 
 
 class Swimming(Training):
@@ -117,8 +113,9 @@ class Swimming(Training):
                 / self.M_IN_KM / self.duration)
 
     def get_spent_calories(self) -> float:
-        temp = self.get_mean_speed() + self.CALORIES_MEAN_SPEED_SHIFT
-        return (temp * self.CALORIES_WEIGHT_MULTIPLIER
+        return (self.get_mean_speed()
+                + self.CALORIES_MEAN_SPEED_SHIFT
+                * self.CALORIES_WEIGHT_MULTIPLIER
                 * self.weight * self.duration)
 
 
