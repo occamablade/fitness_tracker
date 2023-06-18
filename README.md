@@ -22,11 +22,11 @@
 
 1. Клонировать репозиторий.
    ```
-   git@github.com:occamablade/hw_python_oop.git
+   git@github.com:occamablade/fitness_tracker.git
    ```
 2. Cоздать и активировать виртуальное окружение:
     ```
-      $ cd hw_python_oop
+      $ cd fitness_tracker
       $ python -m venv venv
     ```
     Для Windows:
